@@ -48,9 +48,9 @@ class Tetris:
     field = []
     height = 0
     width = 0
-    x = 100
-    y = 60
-    zoom = 20
+    x = 100   #this is play area's starting  point's x co-ordinate
+    y = 60    #this is play area's starting  point's y co-ordinate
+    zoom = 20 
     figure = None
 
     def __init__(self, height, width):
