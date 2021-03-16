@@ -66,7 +66,7 @@ class Tetris:
             self.field.append(new_line)
 
     def new_figure(self):#creates a new object of shapes class
-        self.figure = shapes(3, 0)
+        self.figure = shapes(4, 0)
 
     def intersects(self):
         intersection = False
@@ -177,7 +177,7 @@ while not done:
             if event.key == pygame.K_SPACE:
                 game.go_space()
             if event.key == pygame.K_ESCAPE:
-                game.__init__(20, 10)
+                game.__init__(30, 15)
 
     if event.type == pygame.KEYUP:  #as we dont have to execute any event when key is coming up, so there are no functions involved here
             if event.key == pygame.K_DOWN:
