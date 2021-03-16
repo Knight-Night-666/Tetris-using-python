@@ -94,13 +94,13 @@ class Tetris:
                         self.field[i1][j] = self.field[i1 - 1][j]
         self.score += lines ** 2
 
-    def go_space(self):
+    def go_space(self):  
         while not self.intersects():
             self.figure.y += 1
         self.figure.y -= 1
         self.freeze()
 
-    def go_down(self):
+    def go_down(self):  #this method moves the piece one bit down and if there is an intersection, it returns back and freezes
         self.figure.y += 1
         if self.intersects():
             self.figure.y -= 1
@@ -162,11 +162,11 @@ while not done:
         if game.state == "start":
             game.go_down()
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+    for event in pygame.event.get():  #this loop runs until the game isn't over and takes the event(input) and changes things that are necessary
+        if event.type == pygame.QUIT:  
             done = True
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
+        if event.type == pygame.KEYDOWN:  # execute an event when we are pressing the key
+            if event.key == pygame.K_UP:  
                 game.rotate()
             if event.key == pygame.K_DOWN:
                 pressing_down = True
@@ -179,10 +179,10 @@ while not done:
             if event.key == pygame.K_ESCAPE:
                 game.__init__(20, 10)
 
-    if event.type == pygame.KEYUP:
+    if event.type == pygame.KEYUP:  #as we dont have to execute any event when key is coming up, so there are no functions involved here
             if event.key == pygame.K_DOWN:
                 pressing_down = False
-    screen.fill(BLACK)
+    screen.fill(BLACK)  #assigning colour to the background
 
     for i in range(game.height):
         for j in range(game.width):
@@ -201,15 +201,15 @@ while not done:
                                       game.y + game.zoom * (i + game.figure.y) + 1,
                                       game.zoom - 2, game.zoom - 2])
 
-    font = pygame.font.SysFont('Calibri', 25, True, False)
+    font = pygame.font.SysFont('Calibri', 25, True, False)  #these two lines are used to deifne two kind of fonts for score and game over respectively
     font1 = pygame.font.SysFont('Calibri', 65, True, False)
     text = font.render("Score: " + str(game.score), True, WHITE)
-    text_game_over = font1.render("Game Over", True, (255, 125, 0))
+    text_game_over = font1.render("Game Over", True, (255, 125, 0))  
     text_game_over1 = font1.render("Press ESC", True, (255, 215, 0))
 
     screen.blit(text, [0, 0])
-    if game.state == "gameover":
-        screen.blit(text_game_over, [20, 200])
+    if game.state == "gameover":   
+        screen.blit(text_game_over, [20, 200])  #this executes the gave over messave when you lose
         screen.blit(text_game_over1, [25, 265])
 
     pygame.display.flip()
