@@ -94,7 +94,7 @@ class Tetris:
                         self.field[i1][j] = self.field[i1 - 1][j]
         self.score += lines ** 2
 
-    def go_space(self):  
+    def go_space(self):  #this function brings our piece to the bottom and freezes it there
         while not self.intersects():
             self.figure.y += 1
         self.figure.y -= 1
@@ -106,7 +106,7 @@ class Tetris:
             self.figure.y -= 1
             self.freeze()
 
-    def freeze(self):
+    def freeze(self):  #this is used to freeze our piece to the loacation it is currently in
         for i in range(4):
             for j in range(4):
                 if i * 4 + j in self.figure.image():
@@ -116,13 +116,13 @@ class Tetris:
         if self.intersects():
             self.state = "gameover"
 
-    def go_side(self, dx):
+    def go_side(self, dx):  #this is used to move our piece left and right. if there is any intersection, it just comes back to the original position
         old_x = self.figure.x
         self.figure.x += dx
         if self.intersects():
             self.figure.x = old_x
 
-    def rotate(self):
+    def rotate(self):  # this is used to rotate our piece by one rotation and if there is any intersection, it returns back to the original
         old_rotation = self.figure.rotation
         self.figure.rotate()
         if self.intersects():
