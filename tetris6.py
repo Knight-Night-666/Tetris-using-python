@@ -1,44 +1,43 @@
 import pygame
 import random
-#list of colors that are randomly selected
+
 colors = [
     (0, 0, 0),
-    (0, 111, 255),
-    (19, 244, 239),
-    (104, 255, 0),
-    (250, 255, 0),
-    (255, 191, 0),
-    (255, 0, 92),
+    (120, 37, 179),
+    (100, 179, 179),
+    (80, 34, 22),
+    (80, 134, 22),
+    (180, 34, 22),
+    (180, 34, 122),
 ]
 
 
-class shapes:
-    #this is the display area: x and y
+class Figure:
     x = 0
     y = 0
 
-    shape_map = [
-        [[1, 5, 9, 13], [4, 5, 6, 7]],#vertical line and horizontal line
-        [[4, 5, 9, 10], [2, 6, 5, 9]],#Z and its rotation
-        [[6, 7, 9, 10], [1, 5, 6, 10]],#mirror image of Z and its rotation
-        [[1, 2, 6, 10], [5, 6, 7, 9], [2, 6, 10, 11], [3, 5, 6, 7]],#L and its rotations
-        [[1, 2, 5, 9], [0, 4, 5, 6], [1, 5, 9, 8], [4, 5, 6, 10]],#mirror image of L and its rotations
-        [[1, 4, 5, 6], [1, 4, 5, 9], [4, 5, 6, 9], [1, 5, 6, 9]],#T and its rotations
-        [[1, 2, 5, 6]],#square block
+    figures = [
+        [[1, 5, 9, 13], [4, 5, 6, 7]],
+        [[4, 5, 9, 10], [2, 6, 5, 9]],
+        [[6, 7, 9, 10], [1, 5, 6, 10]],
+        [[1, 2, 5, 9], [0, 4, 5, 6], [1, 5, 9, 8], [4, 5, 6, 10]],
+        [[1, 2, 6, 10], [5, 6, 7, 9], [2, 6, 10, 11], [3, 5, 6, 7]],
+        [[1, 4, 5, 6], [1, 4, 5, 9], [4, 5, 6, 9], [1, 5, 6, 9]],
+        [[1, 2, 5, 6]],
     ]
 
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.type = random.randint(0, len(self.shape_map) - 1)#random shape choice
-        self.color = random.randint(1, len(colors) - 1)#random color assign
-        self.rotation = 0#default value 0
+        self.type = random.randint(0, len(self.figures) - 1)
+        self.color = random.randint(1, len(colors) - 1)
+        self.rotation = 0
 
     def image(self):
-        return self.shape_map[self.type][self.rotation]#returns the specific rotation of a shape
+        return self.figures[self.type][self.rotation]
 
     def rotate(self):
-        self.rotation = (self.rotation + 1) % len(self.shape_map[self.type])#to cycle between the rotations
+        self.rotation = (self.rotation + 1) % len(self.figures[self.type])
 
 
 class Tetris:
@@ -48,9 +47,9 @@ class Tetris:
     field = []
     height = 0
     width = 0
-    x = 100   #this is play area's starting  point's x co-ordinate
-    y = 40    #this is play area's starting  point's y co-ordinate
-    zoom = 15  # this gives us how much zoomed in we are to the screen 
+    x = 100
+    y = 60
+    zoom = 20
     figure = None
 
     def __init__(self, height, width):
@@ -59,14 +58,14 @@ class Tetris:
         self.field = []
         self.score = 0
         self.state = "start"
-        for i in range(height):#created a 2D martix of dimensions height x width with default value 0 at all indices
+        for i in range(height):
             new_line = []
             for j in range(width):
                 new_line.append(0)
             self.field.append(new_line)
 
-    def new_figure(self):#creates a new object of shapes class
-        self.figure = shapes(4, 0)
+    def new_figure(self):
+        self.figure = Figure(3, 0)
 
     def intersects(self):
         intersection = False
@@ -94,19 +93,19 @@ class Tetris:
                         self.field[i1][j] = self.field[i1 - 1][j]
         self.score += lines ** 2
 
-    def go_space(self):  #this function brings our piece to the bottom and freezes it there
+    def go_space(self):
         while not self.intersects():
             self.figure.y += 1
         self.figure.y -= 1
         self.freeze()
 
-    def go_down(self):  #this method moves the piece one bit down and if there is an intersection, it returns back and freezes
+    def go_down(self):
         self.figure.y += 1
         if self.intersects():
             self.figure.y -= 1
             self.freeze()
 
-    def freeze(self):  #this is used to freeze our piece to the loacation it is currently in
+    def freeze(self):
         for i in range(4):
             for j in range(4):
                 if i * 4 + j in self.figure.image():
@@ -116,13 +115,13 @@ class Tetris:
         if self.intersects():
             self.state = "gameover"
 
-    def go_side(self, dx):  #this is used to move our piece left and right. if there is any intersection, it just comes back to the original position
+    def go_side(self, dx):
         old_x = self.figure.x
         self.figure.x += dx
         if self.intersects():
             self.figure.x = old_x
 
-    def rotate(self):  # this is used to rotate our piece by one rotation and if there is any intersection, it returns back to the original
+    def rotate(self):
         old_rotation = self.figure.rotation
         self.figure.rotate()
         if self.intersects():
@@ -146,7 +145,7 @@ pygame.display.set_caption("Tetris")
 done = False
 clock = pygame.time.Clock()
 fps = 25
-game = Tetris(30, 15)
+game = Tetris(20, 10)
 counter = 0
 
 pressing_down = False
@@ -162,11 +161,11 @@ while not done:
         if game.state == "start":
             game.go_down()
 
-    for event in pygame.event.get():  #this loop runs until the game isn't over and takes the event(input) and changes things that are necessary
-        if event.type == pygame.QUIT:  
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
             done = True
-        if event.type == pygame.KEYDOWN:  # execute an event when we are pressing the key
-            if event.key == pygame.K_UP:  
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_UP:
                 game.rotate()
             if event.key == pygame.K_DOWN:
                 pressing_down = True
@@ -177,12 +176,13 @@ while not done:
             if event.key == pygame.K_SPACE:
                 game.go_space()
             if event.key == pygame.K_ESCAPE:
-                game.__init__(30, 15)
+                game.__init__(20, 10)
 
-    if event.type == pygame.KEYUP:  #as we dont have to execute any event when key is coming up, so there are no functions involved here
+    if event.type == pygame.KEYUP:
             if event.key == pygame.K_DOWN:
                 pressing_down = False
-    screen.fill(BLACK)  #assigning colour to the background
+
+    screen.fill(WHITE)
 
     for i in range(game.height):
         for j in range(game.width):
@@ -201,15 +201,15 @@ while not done:
                                       game.y + game.zoom * (i + game.figure.y) + 1,
                                       game.zoom - 2, game.zoom - 2])
 
-    font = pygame.font.SysFont('Calibri', 25, True, False)  #these two lines are used to deifne two kind of fonts for score and game over respectively
+    font = pygame.font.SysFont('Calibri', 25, True, False)
     font1 = pygame.font.SysFont('Calibri', 65, True, False)
-    text = font.render("Score: " + str(game.score), True, WHITE)
-    text_game_over = font1.render("Game Over", True, (255, 125, 0))  
+    text = font.render("Score: " + str(game.score), True, BLACK)
+    text_game_over = font1.render("Game Over", True, (255, 125, 0))
     text_game_over1 = font1.render("Press ESC", True, (255, 215, 0))
 
     screen.blit(text, [0, 0])
-    if game.state == "gameover":   
-        screen.blit(text_game_over, [20, 200])  #this executes the gave over messave when you lose
+    if game.state == "gameover":
+        screen.blit(text_game_over, [20, 200])
         screen.blit(text_game_over1, [25, 265])
 
     pygame.display.flip()
