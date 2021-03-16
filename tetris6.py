@@ -49,8 +49,8 @@ class Tetris:
     height = 0
     width = 0
     x = 100   #this is play area's starting  point's x co-ordinate
-    y = 60    #this is play area's starting  point's y co-ordinate
-    zoom = 20 
+    y = 40    #this is play area's starting  point's y co-ordinate
+    zoom = 15  # this gives us how much zoomed in we are to the screen 
     figure = None
 
     def __init__(self, height, width):
@@ -146,7 +146,7 @@ pygame.display.set_caption("Tetris")
 done = False
 clock = pygame.time.Clock()
 fps = 25
-game = Tetris(20, 10)
+game = Tetris(30, 15)
 counter = 0
 
 pressing_down = False
