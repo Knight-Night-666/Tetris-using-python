@@ -10,15 +10,15 @@ game_over= pygame.mixer.Sound('C:\\Users\\rprak\OneDrive\\Desktop\\ajgar_pirojec
 pygame.mixer.music.load('C:\\Users\\rprak\\OneDrive\Desktop\\ajgar_piroject\\sounds\\bk_music.mp3')
 lazer=pygame.mixer.Sound('C:\\Users\\rprak\\OneDrive\\Desktop\\ajgar_piroject\\sounds\\laser9.mp3')
 pygame.mixer.music.play(-1)
-pygame.mixer.music.set_volume(0.15)
+pygame.mixer.music.set_volume(0.1)
 colors = [
     (0, 0, 0),
     (0, 111, 255),
     (19, 244, 239),
     (104, 255, 0),
     (250, 255, 0),
-    (255, 191, 0),
-    (255, 0, 92),
+    (255,255,255),
+    (213, 0, 50),
 ]
 
 class shapes:
@@ -130,6 +130,7 @@ class Tetris:
         self.new_figure()
         if self.intersects():
             self.state = "gameover"
+            update_scores(self.score)
 
     def go_side(self, dx):
         old_x = self.figure.x
@@ -142,9 +143,24 @@ class Tetris:
         self.figure.rotate()
         if self.intersects():
             self.figure.rotation = old_rotation
+def update_scores(nscore):
+    with open('scores.txt','r') as f:
+        lines=f.readlines()
+        score = lines[0].strip()
+
+    with open('scores.txt','w') as f:
+        if int(score) > nscore:
+            f.write(str(score))
+        else:
+            f.write(str(nscore))
+def max_score():
+    with open('scores.txt','r') as f:
+        lines=f.readlines()
+        score = lines[0].strip()
+    return score
 def draw_next_shape(screen):
-        font = pygame.font.SysFont('comicsans', 26)
-        label = font.render('Next Shape:', 1, (255,255,255))
+        font = pygame.font.Font("C:\\Users\\rprak\\OneDrive\\Desktop\\ajgar_piroject\\RiseofKingdom.ttf", 19)
+        label = font.render('Next Shape', 1, (255,255,255))
         sx = 300
         sy = 180
         for i in range(4):
@@ -155,6 +171,7 @@ def draw_next_shape(screen):
         screen.blit(label, (sx + 5, sy- 30))
 # Initialize the game engine
 pygame.init()
+high_score = max_score()
 
 # Define some colors
 BLACK = (0, 0, 0)
@@ -174,8 +191,8 @@ game = Tetris(20, 10)
 counter = 0
 
 pressing_down = False
-image = pygame.image.load(r'C:\Users\rprak\OneDrive\Desktop\ajgar_piroject\maal2.jpg')
-ending = pygame.image.load(r'C:\Users\rprak\OneDrive\Desktop\ajgar_piroject\f.png')
+image = pygame.image.load(r'C:\Users\rprak\OneDrive\Desktop\ajgar_piroject\maal3.jpg')
+ending = pygame.image.load(r'C:\Users\rprak\OneDrive\Desktop\ajgar_piroject\d.jpg')
 while not done:
     
     if game.figure is None:
@@ -214,11 +231,11 @@ while not done:
             if event.key == pygame.K_DOWN:
                 pressing_down = False
     screen.fill(BLACK)
-    screen.blit(image, (-250, 0))
+    screen.blit(image, (0, -120))
     
     for i in range(game.height):
         for j in range(game.width):
-            pygame.draw.rect(screen, BLACK, [game.x + game.zoom * j, game.y + game.zoom * i, game.zoom, game.zoom], 1)
+            pygame.draw.rect(screen, (198,176,188), [game.x + game.zoom * j, game.y + game.zoom * i, game.zoom, game.zoom], 1)
             if game.field[i][j] > 0:
                 pygame.draw.rect(screen, colors[game.field[i][j]],
                                  [game.x + game.zoom * j + 1, game.y + game.zoom * i + 1, game.zoom - 2, game.zoom - 1])
@@ -233,18 +250,25 @@ while not done:
                                       game.y + game.zoom * (i + game.figure.y) + 1,
                                       game.zoom - 2, game.zoom - 2])
     draw_next_shape(screen)
-    font = pygame.font.SysFont('Calibri', 25, True, False)
+    font = pygame.font.Font("C:\\Users\\rprak\\OneDrive\\Desktop\\ajgar_piroject\\RiseofKingdom.ttf", 25)
     font1 = pygame.font.SysFont('ALGERIAN', 35, True, False)
+    font2 = pygame.font.SysFont('Calibri',16,False,True)
+    font3= pygame.font.SysFont('Calibri',30,False,True)
+    font4 = pygame.font.Font("C:\\Users\\rprak\\OneDrive\\Desktop\\ajgar_piroject\\skinz.ttf", 40)
     text = font.render("Score: " + str(game.score), True, WHITE)
-    text_game_over = font1.render("Game Over", True, (255, 255,255))
     text_game_over1 = font1.render("Press ESC", True, (255, 255,255))
-
-    screen.blit(text, [0, 0])
+    text1 = font2.render("High Score: "+ high_score,True,WHITE)
+    text2=font4.render("TETRIS ",True,WHITE)
+    #text3=font3.render(": " +str(game.score),True,WHITE)
+    screen.blit(text, [0, 150])
+    screen.blit(text1,[0,180])
+    #screen.blit(text3,[70,0])
+    screen.blit(text2,[55,5])
     if game.state == "gameover":
         pygame.mixer.music.stop()
         screen.fill(BLACK)
-        screen.blit(ending, (-40, 0))
-        screen.blit(text_game_over1, (105,0))
+        screen.blit(ending, (0, 100))
+        screen.blit(text_game_over1, (105,160))
         pygame.mixer.Sound.play(game_over)
         #pygame.mixer.music.load('C:\\Users\\rprak\OneDrive\\Desktop\\ajgar_piroject\\game_over.ogg')
         #pygame.mixer.music.play(-1)
