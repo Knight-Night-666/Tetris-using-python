@@ -5,6 +5,7 @@ import os
 from pygame.locals import *
 pygame.mixer.init()
 
+
 colors = [
     (0, 0, 0),
     (0, 111, 255),
