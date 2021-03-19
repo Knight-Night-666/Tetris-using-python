@@ -92,7 +92,7 @@ class Tetris:
         self.score += lines ** 2
         if lines!=0:
             explode = pygame.mixer.Sound('C:\\P_Project\\Explode.ogg')
-            explode.set_volume(0.3)
+            explode.set_volume(0.7)
             pygame.mixer.Sound.play(explode)            
     def go_space(self):
         while not self.intersects():
@@ -178,7 +178,7 @@ def Game():
     image = pygame.image.load('C:\\P_Project\\Back_Final.jpg')
     ending = pygame.image.load('C:\\P_Project\\Game_Over.jpg')
     pygame.mixer.music.load('C:\\P_Project\\BGM_Game.mp3')
-    pygame.mixer.music.set_volume(0.1)
+    pygame.mixer.music.set_volume(0.15)
     pygame.mixer.music.play(-1)
     while not done:        
         if game.figure is None:
@@ -243,6 +243,8 @@ def Game():
         screen.blit(text2,[55,5])
         if game.state == "gameover":
             flag+=1
+            if(flag==3):
+                flag=2
             pygame.mixer.music.stop()
             screen.fill(BLACK)
             screen.blit(ending, (-10, 100))
