@@ -61,12 +61,12 @@ class Tetris:
             new_line = []
             for j in range(width):
                 new_line.append(0)
-            self.field.append(new_line)
+            self.field.append(new_line)  #now field is the 2D matrix
     def new_figure(self):#creates a new object of shapes class
-        self.figure = Tetris.currentshape
-        self.nextshape=shapes(3,0)
-        Tetris.currentshape=self.nextshape
-    def intersects(self):
+        self.figure = Tetris.currentshape    #assigning the current shape as figure
+        self.nextshape=shapes(3,0)  # choosing the next shape to display in the next shape attribute 
+        Tetris.currentshape=self.nextshape  #assigning next shape to the current shape which will be given to the figure once the figure is frozen
+    def intersects(self):  #this algorithm checks if out piece is intersecting with the wall of the game or not
         intersection = False
         for i in range(4):
             for j in range(4):
@@ -77,7 +77,7 @@ class Tetris:
                             self.field[i + self.figure.y][j + self.figure.x] > 0:
                         intersection = True
         return intersection
-    def break_lines(self):
+    def break_lines(self):   # this algorithm breaks the line(if necessary) which is to be broken and creates a new line on the top 
         lines = 0
         for i in range(1, self.height):
             zeros = 0
@@ -92,39 +92,39 @@ class Tetris:
         self.score += lines ** 2
         if lines!=0:
             explode = pygame.mixer.Sound('C:\\P_Project\\Explode.ogg')
-            explode.set_volume(0.7)
+            explode.set_volume(0.3)
             pygame.mixer.Sound.play(explode)            
-    def go_space(self):
+    def go_space(self):# this function is used to instantly drop our figure to the bottom most position available and freeze it there
         while not self.intersects():
             self.figure.y += 1
         self.figure.y -= 1
         self.freeze()
-    def go_down(self):
+    def go_down(self):# this move our figure down by one unit
         self.figure.y += 1
         if self.intersects():
             self.figure.y -= 1
             self.freeze()
-    def freeze(self):
+    def freeze(self):   # this freezes our figure once it is either in contact with the floor or other piece
         for i in range(4):
             for j in range(4):
                 if i * 4 + j in self.figure.image():
                     self.field[i + self.figure.y][j + self.figure.x] = self.figure.color
         self.break_lines()
         self.new_figure()
-        if self.intersects():
+        if self.intersects():  #if intersection is true, then state changes to gameover
             self.state = "gameover"
             update_scores(self.score)
-    def go_side(self, dx):
+    def go_side(self, dx):  #  moves the piece one unit left or right depending on weather dx is +1 or -1 respectively
         old_x = self.figure.x
         self.figure.x += dx
         if self.intersects():
             self.figure.x = old_x
-    def rotate(self):
+    def rotate(self):  #rotates thefigure by 1 unit
         old_rotation = self.figure.rotation
         self.figure.rotate()
         if self.intersects():
             self.figure.rotation = old_rotation
-def update_scores(nscore):
+def update_scores(nscore):  # this function checks if the score is greater than the highscore and if it is, then it  changes the highscore
     with open('C:\\P_Project\\scores.txt','r') as f:
         lines=f.readlines()
         score = lines[0].strip()
@@ -134,12 +134,12 @@ def update_scores(nscore):
             f.write(str(score))
         else:
             f.write(str(nscore))
-def max_score():
+def max_score():  #this reads the txt  file and returns the highscore stored in it
     with open('C:\\P_Project\\scores.txt','r') as f:
         lines=f.readlines()
         score = lines[0].strip()
     return score
-def draw_next_shape(screen,game):
+def draw_next_shape(screen,game):  #this function draws the next shape coming up in the game
         font = pygame.font.Font("C:\\P_Project\\RiseofKingdom.ttf", 19)
         label = font.render('Next Shape', 1, (255,255,255))
         sx = 300
@@ -151,7 +151,7 @@ def draw_next_shape(screen,game):
                     pygame.draw.rect(screen, colors[game.nextshape.color],[sx + j*30, sy + i*30, 30, 30])
         screen.blit(label, (sx + 5, sy- 30))
 def Game():
-    game_over= pygame.mixer.Sound('C:\\P_Project\\Game_Over.mp3')
+    game_over= pygame.mixer.Sound('C:\\P_Project\\Game_Over.mp3') #storing the required sounds and music 
     game_over.set_volume(0.8)
     lazer=pygame.mixer.Sound('C:\\P_Project\\Lazer.mp3')
     rotate_sound=pygame.mixer.Sound("C:\\P_Project\\Rotate.mp3")
@@ -180,7 +180,7 @@ def Game():
     pygame.mixer.music.load('C:\\P_Project\\BGM_Game.mp3')
     pygame.mixer.music.set_volume(0.15)
     pygame.mixer.music.play(-1)
-    while not done:        
+    while not done:        #this loop runs until the state is not gameover
         if game.figure is None:
             game.new_figure()
         counter += 1
@@ -189,10 +189,10 @@ def Game():
         if counter % (fps // game.level // 2) == 0 or pressing_down:
             if game.state == "start":
                 game.go_down()
-        for event in pygame.event.get():
+        for event in pygame.event.get():  #this for loop takes the input from the user and performs the required functions like move left, move right etc
             if event.type == pygame.QUIT:
                 Game_Menu()
-            if event.type == pygame.KEYDOWN:
+            if event.type == pygame.KEYDOWN:  #here keydown is used because we want to perform the action when we are pressing the key and not when we are releasing the key
                 if event.key == pygame.K_UP:
                     game.rotate()
                     pygame.mixer.Sound.play(rotate_sound)
@@ -208,18 +208,18 @@ def Game():
                     game.go_space()
                 if event.key == pygame.K_ESCAPE:
                     Game_Menu()
-        if event.type == pygame.KEYUP:
+        if event.type == pygame.KEYUP:  #when there is keyup, no task is performed 
                 if event.key == pygame.K_DOWN:
                     pressing_down = False
         screen.fill(BLACK)
         screen.blit(image, (0, 0))        
-        for i in range(game.height):
+        for i in range(game.height):  # this loop creates the grid in the play area
             for j in range(game.width):
                 pygame.draw.rect(screen, (198,176,188), [game.x + game.zoom * j, game.y + game.zoom * i, game.zoom, game.zoom], 1)
                 if game.field[i][j] > 0:
                     pygame.draw.rect(screen, colors[game.field[i][j]],
                                     [game.x + game.zoom * j + 1, game.y + game.zoom * i + 1, game.zoom - 2, game.zoom - 1])
-        if game.figure is not None:
+        if game.figure is not None:  #this loop creates the figure in the play area
             for i in range(4):
                 for j in range(4):
                     p = i * 4 + j
@@ -229,7 +229,7 @@ def Game():
                                         game.y + game.zoom * (i + game.figure.y) + 1,
                                         game.zoom - 2, game.zoom - 2])
         draw_next_shape(screen,game)
-        font = pygame.font.Font("C:\\P_Project\\RiseofKingdom.ttf", 25)
+        font = pygame.font.Font("C:\\P_Project\\RiseofKingdom.ttf", 25)  
         font1 = pygame.font.SysFont('ALGERIAN', 35, True, False)
         font2 = pygame.font.SysFont('Calibri',16,False,True)
         font3= pygame.font.SysFont('Calibri',30,False,True)
@@ -238,19 +238,26 @@ def Game():
         text_game_over1 = font1.render("Press ESC", True, (255, 255,255))
         text1 = font2.render("High Score: "+ high_score,True,WHITE)
         text2=font4.render("TETRIS ",True,WHITE)
-        screen.blit(text, [0, 150])
+        screen.blit(text, [0, 150])  #showing the score,highscore and TETRIS in the main game screen
         screen.blit(text1,[0,180])
         screen.blit(text2,[55,5])
-        if game.state == "gameover":
+        if game.state == "gameover":  #here starts the ending screen
             flag+=1
             if(flag==3):
                 flag=2
-            pygame.mixer.music.stop()
-            screen.fill(BLACK)
-            screen.blit(ending, (-10, 100))
-            screen.blit(text_game_over1, (95,160))
+            pygame.mixer.music.stop()  #we stop the game music 
+            screen.fill(BLACK)  #fill the screen black and enter into the endgame screen
+            screen.blit(ending, (-10, 70))
+            screen.blit(text_game_over1, (95,130))
+            Button=pygame.Rect(100,280,200,50)
+            pygame.draw.rect(screen, (255, 255, 255), Button)
+            f1 = pygame.font.SysFont("Times New Roman", 25, bold=True)
+            T=f1.render("Score:"+str(game.score),True,(0,0,0))
+            rect=T.get_rect()
+            rect.topleft=(160,288)
+            screen.blit(T,rect)
             if(flag==1):
-                pygame.mixer.Sound.play(game_over)
+                pygame.mixer.Sound.play(game_over)  #gameover music is played
         pygame.display.flip()
         clock.tick(fps)
 #Function to make a button
@@ -324,7 +331,7 @@ def Instructions():
         image = pygame.image.load('C:\\P_Project\\Retro2.0_Final.jpg')
         screen.blit(image,(0,0))
         f = pygame.font.Font("C:\\P_Project\\Morzo.ttf", 40, bold=True, italic=True)
-        text=f.render("Instrcutions",True,(255,255,255))
+        text=f.render("Instructions",True,(255,255,255))
         rect=text.get_rect()
         rect.topleft=(10,20)
         screen.blit(text,rect)
