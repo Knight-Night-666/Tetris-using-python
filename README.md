@@ -1,2 +1,2 @@
 # Tetris-using-python
-eet izz wut eet izz
+Remaking the iconic game Tetris using the pygame library of python!
