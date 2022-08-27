@@ -64,13 +64,13 @@ The game in action: - Game over state, reached after
 
 - A seemingly simple game like Tetris could well be modified in many ways
 
-A) Harder levels with larger boards and faster block drops.
+- Harder levels with larger boards and faster block drops.
 
-B) Making an AI which can beat the game, or set an incredibly high score to beat.
+- Making an AI which can beat the game, or set an incredibly high score to beat.
 
-C) Multiplayer mode with real-time competition
+- Multiplayer mode with real-time competition
 
-D) Customization in Controls, Aesthetics, and Audio.
+- Customization in Controls, Aesthetics, and Audio.
 
 - Many such retro-arcade games can be made together in a similar fashion to make a Modern time
 Retro-Arcade to relive some of the old classic games with a fun new twist.
