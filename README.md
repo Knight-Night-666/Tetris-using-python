@@ -21,8 +21,8 @@ The game uses the following controls:
 
 2) Arrow Keys-Left and Right to move the Tetris blocks sideways
 
-- Upward arrow to change rotation of current block
-- Downward arrow to increase the falling speed of the current block
+3) Upward arrow to change rotation of current block
+4) Downward arrow to increase the falling speed of the current block
 
 3) Escape Button-To exit to the main menu at any time during/After the game
 
